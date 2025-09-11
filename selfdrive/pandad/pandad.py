@@ -38,7 +38,7 @@ def flash_panda(panda_serial: str) -> Panda:
 
   # skip flashing if the detected device is deprecated from upstream
   hw_type = panda.get_type()
-  if hw_type in Panda.DEPRECATED_DEVICES:
+  if hw_type not in Panda.SUPPORTED_DEVICES:
     cloudlog.warning(f"Panda {panda_serial} is deprecated (hw_type: {hw_type}), skipping flash...")
     return panda
 
