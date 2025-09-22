@@ -15,7 +15,7 @@ AccelPersonality = custom.LongitudinalPlanSP.AccelerationPersonality
 
 # Acceleration Profiles mapped to AccelPersonality (eco/normal/sport)
 MAX_ACCEL_PROFILES = {
-    AccelPersonality.eco:       [1.8,  1.40,  1.20, 0.80, .500, .292, .13, .09],  # eco
+    AccelPersonality.eco:       [1.7,  1.30,  1.10, 0.70, .500, .292, .13, .09],  # eco
     AccelPersonality.normal:    [2.0,  1.95,  1.85, 1.30, .650, .310, .17, .12],   # normal
     AccelPersonality.sport:     [2.0,  2.00,  1.99, 1.65, .800, .333, .24, .2],    # sport
 }
@@ -23,9 +23,9 @@ MAX_ACCEL_BREAKPOINTS =         [0.,   4.,   6.,   9.,   16.,  25.,  30., 55.]
 
 # Braking profiles mapped to LongPersonality (relaxed/standard/aggressive)
 MIN_ACCEL_PROFILES = {
-    LongPersonality.relaxed:    [-.05, -.1, -.9,  -1.05, -1.2],  # gentler braking
-    LongPersonality.standard:   [-.05, -.1, -.9,  -1.05, -1.2],  # normal braking
-    LongPersonality.aggressive: [-.05, -.1, -.9,  -1.05, -1.2],  # more aggressive braking
+    LongPersonality.relaxed:    [-.1, -.5, -.9,  -1.05, -1.2],  # gentler braking
+    LongPersonality.standard:   [-.1, -.5, -.9,  -1.05, -1.2],  # normal braking
+    LongPersonality.aggressive: [-.1, -.5, -.9,  -1.05, -1.2],  # more aggressive braking
 }
 MIN_ACCEL_BREAKPOINTS =         [0.,   1.5,    2.,   11.,  20.]
 
@@ -33,9 +33,9 @@ MIN_ACCEL_BREAKPOINTS =         [0.,   1.5,    2.,   11.,  20.]
 def get_T_FOLLOW_vibe(personality):
     """Get base T_FOLLOW value for each personality"""
     return {
-        LongPersonality.relaxed: 2.20,
-        LongPersonality.standard: 1.80,
-        LongPersonality.aggressive: 1.80
+        LongPersonality.relaxed: 2.25,
+        LongPersonality.standard: 1.85,
+        LongPersonality.aggressive: 1.85
     }[personality]
 
 
