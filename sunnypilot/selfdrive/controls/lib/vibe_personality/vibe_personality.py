@@ -33,15 +33,15 @@ MIN_ACCEL_BREAKPOINTS =         [0.,   1.5,    4.,   9.,  19.]
 def get_T_FOLLOW_vibe(personality):
     """Get base T_FOLLOW value for each personality"""
     return {
-        LongPersonality.relaxed: 2.20,
-        LongPersonality.standard: 1.80,
-        LongPersonality.aggressive: 1.80
+        LongPersonality.relaxed: 2.05,
+        LongPersonality.standard: 1.85,
+        LongPersonality.aggressive: 1.65
     }[personality]
 
 
 def get_dynamic_personality(v_ego, personality):
     """Adjust T_FOLLOW based on vehicle speed"""
-    scale_factor = np.interp(v_ego, [0, 28], [0.9, 1.0])
+    scale_factor = np.interp(v_ego, [0, 28], [1.0, 1.0])
     return get_T_FOLLOW_vibe(personality) * scale_factor
 
 
