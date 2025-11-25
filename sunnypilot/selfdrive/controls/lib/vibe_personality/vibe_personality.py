@@ -35,7 +35,7 @@ def get_T_FOLLOW_vibe(personality):
     return {
         LongPersonality.relaxed: 1.75,
         LongPersonality.standard: 1.45,
-        LongPersonality.aggressive: 1.25
+        LongPersonality.aggressive: 1.20
     }[personality]
 
 
