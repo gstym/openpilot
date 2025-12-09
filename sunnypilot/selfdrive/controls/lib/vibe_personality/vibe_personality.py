@@ -23,11 +23,11 @@ MAX_ACCEL_BREAKPOINTS =       [0.,   4.,   6.,   9.,   16.,  25., 30., 55.]
 
 # Braking profiles mapped to LongPersonality (relaxed/standard/aggressive)
 MIN_ACCEL_PROFILES = {
-    LongPersonality.relaxed:    [-0.6, -0.8, -1.0,  -1.2, -1.3],  # gentler braking
-    LongPersonality.standard:   [-0.6, -0.8, -1.0,  -1.2, -1.3],  # normal braking
-    LongPersonality.aggressive: [-0.6, -0.8, -1.0,  -1.2, -1.3],  # more aggressive braking
+    LongPersonality.relaxed:    [-0.5, -0.7, -0.9,  -1.2, -1.3],  # gentler braking
+    LongPersonality.standard:   [-0.5, -0.7, -0.9,  -1.2, -1.3],  # normal braking
+    LongPersonality.aggressive: [-0.5, -0.7, -0.9,  -1.2, -1.3],  # more aggressive braking
 }
-MIN_ACCEL_BREAKPOINTS =         [0.,   1.5,    4.,   8.,  21.]
+MIN_ACCEL_BREAKPOINTS =         [0.,   1.5,    3.,   5.,  20.]
 
 
 def get_T_FOLLOW_vibe(personality):
