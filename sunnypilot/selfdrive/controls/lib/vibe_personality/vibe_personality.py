@@ -34,8 +34,8 @@ def get_T_FOLLOW_vibe(personality):
     """Get base T_FOLLOW value for each personality"""
     return {
         LongPersonality.relaxed: 1.80,
-        LongPersonality.standard: 1.,35,
-        LongPersonality.aggressive: 1.05
+        LongPersonality.standard: 1.,40,
+        LongPersonality.aggressive: 1.10
     }[personality]
 
 
