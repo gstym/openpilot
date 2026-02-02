@@ -23,25 +23,25 @@ MAX_ACCEL_BREAKPOINTS =         [0.,  1,   3.,  6.,    8.,  11., 16., 20., 25., 
 
 # Braking profiles mapped to LongPersonality (relaxed/standard/aggressive)
 MIN_ACCEL_PROFILES = {
-    LongPersonality.relaxed:    [-0.7, -0.95, -1.2,  -1.5, -1.8],  # gentler braking
-    LongPersonality.standard:   [-0.7, -0.95, -1.2,  -1.5, -1.8],  # normal braking
-    LongPersonality.aggressive: [-0.7, -0.95, -1.2,  -1.5, -1.8],  # more aggressive braking
+    LongPersonality.relaxed:    [-0.7, -1.2, -2.5, -3.5, -3.8, -4.0],  # gentler braking
+    LongPersonality.standard:   [-0.7, -1.2, -2.5, -3.5, -3.8, -4.0],  # normal braking
+    LongPersonality.aggressive: [-0.7, -1.2, -2.5, -3.5, -3.8, -4.0],  # more aggressive braking
 }
-MIN_ACCEL_BREAKPOINTS =         [0.,   1.5,    3.,   6.,  13.8.]
+MIN_ACCEL_BREAKPOINTS =         [0.,   3.,   8.,   12.,  20.,  30.]
 
 
 def get_T_FOLLOW_vibe(personality):
     """Get base T_FOLLOW value for each personality"""
     return {
-        LongPersonality.relaxed: 2.20,
+        LongPersonality.relaxed: 2.00,
         LongPersonality.standard: 1.50,
-        LongPersonality.aggressive: 1.20
+        LongPersonality.aggressive: 1.25
     }[personality]
 
 
 def get_dynamic_personality(v_ego, personality):
     """Adjust T_FOLLOW based on vehicle speed"""
-    scale_factor = np.interp(v_ego, [0, 22], [0.8, 1.0])
+    scale_factor = np.interp(v_ego, [0, 8, 25], [0.75, 0.8, 1.0])
     return get_T_FOLLOW_vibe(personality) * scale_factor
 
 
