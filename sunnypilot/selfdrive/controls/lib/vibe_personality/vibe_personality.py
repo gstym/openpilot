@@ -35,13 +35,13 @@ def get_T_FOLLOW_vibe(personality):
     return {
         LongPersonality.relaxed: 2.20,
         LongPersonality.standard: 1.90,
-        LongPersonality.aggressive: 1.55
+        LongPersonality.aggressive: 1.60
     }[personality]
 
 
 def get_dynamic_personality(v_ego, personality):
     """Adjust T_FOLLOW based on vehicle speed"""
-    scale_factor = np.interp(v_ego, [0, 25], [0.7, 1.0])
+    scale_factor = np.interp(v_ego, [0, 22], [0.7, 1.0])
     return get_T_FOLLOW_vibe(personality) * scale_factor
 
 
