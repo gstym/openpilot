@@ -82,9 +82,20 @@ def get_T_FOLLOW(personality=log.LongitudinalPersonality.standard):
   else:
     raise NotImplementedError("Longitudinal personality not supported")
 
-def get_stopped_equivalence_factor(v_lead, v_ego):
-  # KRKeegan this offset rapidly decreases the following distance when the lead pulls
-  # away, resulting in an early demand for acceleration.
+# 這是給 CasADi 編譯用的純物理公式 (沒有 v_ego，不包含 Numpy)
+def get_stopped_equivalence_factor(v_lead):
+  return (v_lead**2) / (2 * COMFORT_BRAKE)
+
+def get_safe_obstacle_distance(v_ego, t_follow):
+  return (v_ego**2) / (2 * COMFORT_BRAKE) + t_follow * v_ego + STOP_DISTANCE
+
+def desired_follow_distance(v_ego, v_lead, t_follow=None):
+  if t_follow is None:
+    t_follow = get_T_FOLLOW()
+  return get_safe_obstacle_distance(v_ego, t_follow) - get_stopped_equivalence_factor(v_lead)
+
+# 這是給 Python 執行期計算補償值的新函式 (包含 Numpy)
+def get_stopped_equivalence_factor_with_offset(v_lead, v_ego):
   v_diff_offset = 0
   v_diff_offset_max = 10
   speed_to_reach_max_v_diff_offset = 15 # in kp/h
@@ -94,16 +105,7 @@ def get_stopped_equivalence_factor(v_lead, v_ego):
     v_diff_offset = delta_speed * 2
     v_diff_offset = np.clip(v_diff_offset, 0, v_diff_offset_max)
     v_diff_offset = np.maximum(v_diff_offset * ((speed_to_reach_max_v_diff_offset - v_ego)/speed_to_reach_max_v_diff_offset), 0)
-  return (v_lead**2) / (2 * COMFORT_BRAKE) + v_diff_offset
-
-def get_safe_obstacle_distance(v_ego, t_follow):
-  return (v_ego**2) / (2 * COMFORT_BRAKE) + t_follow * v_ego + STOP_DISTANCE
-
-def desired_follow_distance(v_ego, v_lead, t_follow=None):
-  if t_follow is None:
-    t_follow = get_T_FOLLOW()
-  return get_safe_obstacle_distance(v_ego, t_follow) - get_stopped_equivalence_factor(v_lead, v_ego)
-
+  return get_stopped_equivalence_factor(v_lead) + v_diff_offset
 
 def gen_long_model():
   model = AcadosModel()
@@ -374,8 +376,8 @@ class LongitudinalMpc:
     # To estimate a safe distance from a moving lead, we calculate how much stopping
     # distance that lead needs as a minimum. We can add that to the current distance
     # and then treat that as a stopped car/obstacle at this new distance.
-    lead_0_obstacle = lead_xv_0[:,0] + get_stopped_equivalence_factor(lead_xv_0[:,1], v_ego)
-    lead_1_obstacle = lead_xv_1[:,0] + get_stopped_equivalence_factor(lead_xv_1[:,1], v_ego)
+    lead_0_obstacle = lead_xv_0[:,0] + get_stopped_equivalence_factor_with_offset(lead_xv_0[:,1], v_ego)
+    lead_1_obstacle = lead_xv_1[:,0] + get_stopped_equivalence_factor_with_offset(lead_xv_1[:,1], v_ego)
 
     self.params[:,0] = ACCEL_MIN
     self.params[:,1] = ACCEL_MAX
