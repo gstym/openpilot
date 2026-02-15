@@ -33,9 +33,9 @@ MIN_ACCEL_BREAKPOINTS =         [0.,   3.,   6.,   10.,  30.]
 def get_T_FOLLOW_vibe(personality):
     """Get base T_FOLLOW value for each personality"""
     return {
-        LongPersonality.relaxed: 2.20,
-        LongPersonality.standard: 1.90,
-        LongPersonality.aggressive: 1.60
+        LongPersonality.relaxed: 2.15,
+        LongPersonality.standard: 1.85,
+        LongPersonality.aggressive: 1.55
     }[personality]
 
 
