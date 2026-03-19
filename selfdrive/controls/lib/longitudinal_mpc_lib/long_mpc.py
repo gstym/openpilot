@@ -4,6 +4,7 @@ import time
 import numpy as np
 from cereal import log
 from opendbc.car.interfaces import ACCEL_MIN, ACCEL_MAX
+from openpilot.common.conversions import Conversions as CV
 from openpilot.common.realtime import DT_MDL
 from openpilot.common.swaglog import cloudlog
 # WARNING: imports outside of constants will not trigger a rebuild
@@ -81,8 +82,17 @@ def get_T_FOLLOW(personality=log.LongitudinalPersonality.standard):
   else:
     raise NotImplementedError("Longitudinal personality not supported")
 
-def get_stopped_equivalence_factor(v_lead):
-  return (v_lead**2) / (2 * COMFORT_BRAKE)
+def get_stopped_equivalence_factor(v_lead, v_ego):  # 絕對不要寫 v_ego=0.
+  v_diff_offset = 0
+  v_diff_offset_max = 5
+  speed_to_reach_max_v_diff_offset = 15
+  speed_to_reach_max_v_diff_offset = speed_to_reach_max_v_diff_offset * CV.KPH_TO_MS
+  delta_speed = v_lead - v_ego
+  if np.all(delta_speed > 0.3):
+    v_diff_offset = delta_speed * 1.5
+    v_diff_offset = np.clip(v_diff_offset, 0, v_diff_offset_max)
+    v_diff_offset = np.maximum(v_diff_offset * ((speed_to_reach_max_v_diff_offset - v_ego)/speed_to_reach_max_v_diff_offset), 0)
+  return (v_lead**2) / (2 * COMFORT_BRAKE) + v_diff_offset
 
 def get_safe_obstacle_distance(v_ego, t_follow):
   return (v_ego**2) / (2 * COMFORT_BRAKE) + t_follow * v_ego + STOP_DISTANCE
@@ -90,7 +100,7 @@ def get_safe_obstacle_distance(v_ego, t_follow):
 def desired_follow_distance(v_ego, v_lead, t_follow=None):
   if t_follow is None:
     t_follow = get_T_FOLLOW()
-  return get_safe_obstacle_distance(v_ego, t_follow) - get_stopped_equivalence_factor(v_lead)
+  return get_safe_obstacle_distance(v_ego, t_follow) - get_stopped_equivalence_factor(v_lead, v_ego)
 
 
 def gen_long_model():
@@ -362,8 +372,8 @@ class LongitudinalMpc:
     # To estimate a safe distance from a moving lead, we calculate how much stopping
     # distance that lead needs as a minimum. We can add that to the current distance
     # and then treat that as a stopped car/obstacle at this new distance.
-    lead_0_obstacle = lead_xv_0[:,0] + get_stopped_equivalence_factor(lead_xv_0[:,1])
-    lead_1_obstacle = lead_xv_1[:,0] + get_stopped_equivalence_factor(lead_xv_1[:,1])
+    lead_0_obstacle = lead_xv_0[:,0] + get_stopped_equivalence_factor(lead_xv_0[:,1], v_ego)
+    lead_1_obstacle = lead_xv_1[:,0] + get_stopped_equivalence_factor(lead_xv_1[:,1], v_ego)
 
     self.params[:,0] = ACCEL_MIN
     self.params[:,1] = ACCEL_MAX
