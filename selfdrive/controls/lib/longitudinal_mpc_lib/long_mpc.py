@@ -82,9 +82,9 @@ def get_T_FOLLOW(personality=log.LongitudinalPersonality.standard):
   else:
     raise NotImplementedError("Longitudinal personality not supported")
 
-def get_stopped_equivalence_factor(v_lead, v_ego):  # 絕對不要寫 v_ego=0.
+def get_stopped_equivalence_factor(v_lead, v_ego=100.):
   v_diff_offset = 0
-  v_diff_offset_max = 5
+  v_diff_offset_max = 3
   speed_to_reach_max_v_diff_offset = 15
   speed_to_reach_max_v_diff_offset = speed_to_reach_max_v_diff_offset * CV.KPH_TO_MS
   delta_speed = v_lead - v_ego
