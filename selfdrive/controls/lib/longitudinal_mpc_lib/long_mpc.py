@@ -412,8 +412,7 @@ class LongitudinalMpc:
       self.solver.set(i, "yref", self.yref[i])
     self.solver.set(N, "yref", self.yref[N][:COST_E_DIM])
 
-    STOP_DISTANCE_ADJUST = 1.0
-    self.params[:,2] = np.min(x_obstacles, axis=1) + STOP_DISTANCE_ADJUST
+    self.params[:,2] = np.min(x_obstacles, axis=1)
     self.params[:,3] = np.copy(self.prev_a)
     self.params[:,4] = t_follow
 
